@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="lib/kogrid.css">
     <link rel="stylesheet" type="text/css" href="lib/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="lib/css/boostrap-responsive.css">
     <style type="text/css">
 .kgRowFooter,
 .kgRow.kgRowFooter:nth-child(even),
@@ -44,6 +43,16 @@
             It includes features like virtual scrolling, sorting, grouping, and more. See <a href="http://knockout-contrib.github.io/KoGrid/#/overview">Knockout-Contrib</a> for more info.
             <h3>Improvements</h3>
             I've made a number of improvements to the kogrid:
+            <ul>
+                <li>Added grouped rows and aggregation</li>
+                <li>Add a footer row which will show totals for each column</li>
+                <li>Improve the naming of the group column</li>
+                <li>Support for sorting grouped grids</li>
+                <li>Create Expand/Collapse-all buttons</li>
+                <li>Improve speed of grouped grid, esp when expanding and collapsing rows</li>
+                <li>Add an amd module output to the build process</li>
+                <li>Add cell selection and improve row selection</li>
+            </ul>
 
         </div>
     </div>
@@ -57,7 +66,6 @@
 <script type="text/javascript" src="lib/knockout-2.2.0.js"></script>
 <script type="text/javascript" src="lib/jquery-1.8.2.min.js"></script>
 <script type="text/javascript" src="lib/koGrid-2.1.1.debug.js"></script>
-<script type="text/javascript" src="linqParser.js"></script>
 <script type="text/javascript" src="dummyData.js"></script>
 
 <script type="text/javascript">
@@ -70,13 +78,32 @@ var ViewModel = function () {
     this.parsedData = ko.observableArray(data);
     this.columnDefs = ko.observableArray();
     this.gridOptions = {
-            data: self.parsedData
+            data: self.parsedData,
+        selectedItems: self.mySelections,
+        displaySelectionCheckbox: false,
+        multiSelect: true,
+        showGroupPanel: true,
+        showColumnMenu: true,
+        showFilter: true,
+        columnsChanged: self.columnsChanged,
+        maintainColumnRatios: true,
+        enablePaging: true,
+        pagingOptions: self.pagingOptions,
+        hideChildren: false,
+        footerVisible: false,
+        columnDefs: ko.observableArray([
+            {field: '_sortIndex', visible: false, displayName: "Random Sort", sortDirection: "asc"},
+            {field: 'name', visible: true, displayName: "Name", selectable: true},
+            {field: 'title', visible: false, displayName: "Title", groupIndex: 1},
+            {field: 'age', visible: true, displayName: "Age"},
+            {field: 'salary', visible: true, displayName: "Salary", agg: "sum"}
+        ])
     };
     $('.gridStyle').resize();
 };
-
-ko.applyBindings(new ViewModel());
-
+var myvm = new ViewModel();
+ko.applyBindings(myvm);
+myvm.parsedData.notifySubscribers(myvm.parsedData());
 </script>
 
 </body>
