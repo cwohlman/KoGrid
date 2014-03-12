@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>KoGrid with Queries!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="lib/kogrid.css">
+    <link rel="stylesheet" type="text/css" href="lib/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="lib/css/boostrap-responsive.css">
+    <style type="text/css">
+.kgRowFooter,
+.kgRow.kgRowFooter:nth-child(even),
+.kgRow.kgRowFooter:nth-child(odd),
+.invertStriping .kgRow.kgRowFooter:nth-child(even):not(.selected),
+.invertStriping .kgRow.kgRowFooter:nth-child(odd):not(.selected) {
+    position: absolute;
+    border-top: 1.5px solid rgb(212,212,212);
+    background-color: rgb(234, 234, 234);
+    overflow: hidden;
+                /*width: 1381px;
+                height: 30px;
+                bottom: 17px;*/
+}
+
+/* Hack to fix inconsistent viewport and header handling-the ko.computed styles cannot account for the presense of a scroll bar, if one does not exist, the scroll between column headers and canvas may become inconsistent.*/
+.gridStyle .kgViewport {
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
+    </style>
+</head>
+<body style="padding-top: 60px">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="#">Ko Grid </a>
+      </div>
+  </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            <h3>KoGrid</h3>
+            The koGrid is a port from ng-grid which provides a powerful in browser grid.
+            It includes features like virtual scrolling, sorting, grouping, and more. See <a href="http://knockout-contrib.github.io/KoGrid/#/overview">Knockout-Contrib</a> for more info.
+            <h3>Improvements</h3>
+            I've made a number of improvements to the kogrid:
+
+        </div>
+    </div>
+    <div class="row">
+        <div data-bind = "with: gridOptions">
+            <div  class="span12 gridStyle" style="height: 55%; position: absolute;" data-bind="koGrid: $data">
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="lib/knockout-2.2.0.js"></script>
+<script type="text/javascript" src="lib/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="lib/koGrid-2.1.1.debug.js"></script>
+<script type="text/javascript" src="linqParser.js"></script>
+<script type="text/javascript" src="dummyData.js"></script>
+
+<script type="text/javascript">
+// Main app code here
+
+var ViewModel = function () {
+    var self = this;
+    var data = peopleData();
+
+    this.parsedData = ko.observableArray(data);
+    this.columnDefs = ko.observableArray();
+    this.gridOptions = {
+            data: self.parsedData
+    };
+    $('.gridStyle').resize();
+};
+
+ko.applyBindings(new ViewModel());
+
+</script>
+
+</body>
+</html>
